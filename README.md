@@ -12,7 +12,7 @@ A new RC comms setup will be implemented to allow for a whole new RC remote to c
 
 <h2> Lighting </h2>
 
-A major design change will include a lighting system featuring 2 headlights and 1-2 taillights to improve safety when riding in the evening and to help tie the board in with developing regulations on e-scooters in the UK. These lights will likely be mounted via the truck mounts, with an bracket sitting underneath the truck flange to fix the lights in the correct locations.
+A major design change will include a lighting system featuring 2 headlights and 1-2 tail lights to improve safety when riding in the evening and to help tie the board in with developing regulations on e-scooters in the UK. These lights will likely be mounted via the truck mounts, with an bracket sitting underneath the truck flange to fix the lights in the correct locations.
 
 <h2> GPS </h2>
 
