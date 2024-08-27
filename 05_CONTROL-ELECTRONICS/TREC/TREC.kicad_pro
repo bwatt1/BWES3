@@ -578,6 +578,18 @@
     [
       "d689671b-0022-4244-94e9-f990dec3d4f1",
       "Root"
+    ],
+    [
+      "0b84e83a-a9f6-4dbd-9677-36d01b471738",
+      "MCU"
+    ],
+    [
+      "777aa873-8fb8-4344-a2b0-db12b88054c4",
+      "Gate Driver"
+    ],
+    [
+      "fc4aac34-8c16-4364-8315-1578acc47b40",
+      "MOSFETs"
     ]
   ],
   "text_variables": {}
