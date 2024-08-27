@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "TREC_Lib")(type "KiCad")(uri "${KIPRJMOD}/TREC_Lib.kicad_sym")(options "")(descr ""))
+)
