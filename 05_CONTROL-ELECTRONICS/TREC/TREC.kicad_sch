@@ -14,7 +14,7 @@
 			(type solid)
 		)
 		(fill
-			(color 0 0 0 0.0000)
+			(color 255 0 49 1.0000)
 		)
 		(uuid "0b84e83a-a9f6-4dbd-9677-36d01b471738")
 		(property "Sheetname" "MCU"
@@ -52,7 +52,7 @@
 			(type solid)
 		)
 		(fill
-			(color 0 0 0 0.0000)
+			(color 16 153 255 1.0000)
 		)
 		(uuid "777aa873-8fb8-4344-a2b0-db12b88054c4")
 		(property "Sheetname" "Gate Driver"
@@ -90,7 +90,7 @@
 			(type solid)
 		)
 		(fill
-			(color 0 0 0 0.0000)
+			(color 255 171 49 1.0000)
 		)
 		(uuid "fc4aac34-8c16-4364-8315-1578acc47b40")
 		(property "Sheetname" "MOSFETs"
