@@ -23,3 +23,5 @@
 871	1396	8081854836950765	cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_pwr.c.obj	e01fa1535a47e4bb
 923	1510	8081854837471188	cmake/stm32cubemx/CMakeFiles/STM32_Drivers.dir/__/__/Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c.obj	c180c70703b26fc
 1510	1799	8081854843336693	Midas_LCD_Test.elf	fbfbda459195fa57
+33	445	8081859227206898	CMakeFiles/Midas_LCD_Test.dir/Core/Src/main.c.obj	6ff38a3a0a8fc988
+447	813	8081859231341607	Midas_LCD_Test.elf	fbfbda459195fa57
