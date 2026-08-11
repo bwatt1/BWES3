@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/Users/benja/Documents/Projects/BWES3/05_CONTROL-ELECTRONICS/ESC-Software/Prototyping/Midas_LCD_Test/build/Debug/cmake_install.cmake",
+		"C:/Users/benja/Documents/Projects/BWES3/05_CONTROL-ELECTRONICS/ESC-Software/Prototyping/Midas_LCD_Test/build/Debug/cmake/stm32cubemx/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
