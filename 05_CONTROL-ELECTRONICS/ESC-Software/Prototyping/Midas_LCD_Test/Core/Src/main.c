@@ -44,6 +44,76 @@ I2C_HandleTypeDef hi2c1;
 
 UART_HandleTypeDef huart2;
 
+/* SSD1306 settings ----------------------------------------------------------*/
+#define SSD1306_ADDR       (0x3C << 1)
+#define SSD1306_WIDTH      128
+#define SSD1306_HEIGHT     64
+
+static uint8_t oled_buffer[SSD1306_WIDTH * SSD1306_HEIGHT / 8];
+
+/* 5x7 font - characters 0x20 to 0x5A */
+static const uint8_t font5x7[][5] =
+{
+    {0x00,0x00,0x00,0x00,0x00}, // space
+    {0x00,0x00,0x5F,0x00,0x00}, // !
+    {0x00,0x07,0x00,0x07,0x00}, // "
+    {0x14,0x7F,0x14,0x7F,0x14}, // #
+    {0x24,0x2A,0x7F,0x2A,0x12}, // $
+    {0x23,0x13,0x08,0x64,0x62}, // %
+    {0x36,0x49,0x55,0x22,0x50}, // &
+    {0x00,0x05,0x03,0x00,0x00}, // '
+    {0x00,0x1C,0x22,0x41,0x00}, // (
+    {0x00,0x41,0x22,0x1C,0x00}, // )
+    {0x14,0x08,0x3E,0x08,0x14}, // *
+    {0x08,0x08,0x3E,0x08,0x08}, // +
+    {0x00,0x50,0x30,0x00,0x00}, // ,
+    {0x08,0x08,0x08,0x08,0x08}, // -
+    {0x00,0x60,0x60,0x00,0x00}, // .
+    {0x20,0x10,0x08,0x04,0x02}, // /
+    {0x3E,0x51,0x49,0x45,0x3E}, // 0
+    {0x00,0x42,0x7F,0x40,0x00}, // 1
+    {0x42,0x61,0x51,0x49,0x46}, // 2
+    {0x21,0x41,0x45,0x4B,0x31}, // 3
+    {0x18,0x14,0x12,0x7F,0x10}, // 4
+    {0x27,0x45,0x45,0x45,0x39}, // 5
+    {0x3C,0x4A,0x49,0x49,0x30}, // 6
+    {0x01,0x71,0x09,0x05,0x03}, // 7
+    {0x36,0x49,0x49,0x49,0x36}, // 8
+    {0x06,0x49,0x49,0x29,0x1E}, // 9
+    {0x00,0x36,0x36,0x00,0x00}, // :
+    {0x00,0x56,0x36,0x00,0x00}, // ;
+    {0x08,0x14,0x22,0x41,0x00}, // <
+    {0x14,0x14,0x14,0x14,0x14}, // =
+    {0x00,0x41,0x22,0x14,0x08}, // >
+    {0x02,0x01,0x51,0x09,0x06}, // ?
+    {0x32,0x49,0x79,0x41,0x3E}, // @
+    {0x7E,0x11,0x11,0x11,0x7E}, // A
+    {0x7F,0x49,0x49,0x49,0x36}, // B
+    {0x3E,0x41,0x41,0x41,0x22}, // C
+    {0x7F,0x41,0x41,0x22,0x1C}, // D
+    {0x7F,0x49,0x49,0x49,0x41}, // E
+    {0x7F,0x09,0x09,0x09,0x01}, // F
+    {0x3E,0x41,0x49,0x49,0x7A}, // G
+    {0x7F,0x08,0x08,0x08,0x7F}, // H
+    {0x00,0x41,0x7F,0x41,0x00}, // I
+    {0x20,0x40,0x41,0x3F,0x01}, // J
+    {0x7F,0x08,0x14,0x22,0x41}, // K
+    {0x7F,0x40,0x40,0x40,0x40}, // L
+    {0x7F,0x02,0x0C,0x02,0x7F}, // M
+    {0x7F,0x04,0x08,0x10,0x7F}, // N
+    {0x3E,0x41,0x41,0x41,0x3E}, // O
+    {0x7F,0x09,0x09,0x09,0x06}, // P
+    {0x3E,0x41,0x51,0x21,0x5E}, // Q
+    {0x7F,0x09,0x19,0x29,0x46}, // R
+    {0x46,0x49,0x49,0x49,0x31}, // S
+    {0x01,0x01,0x7F,0x01,0x01}, // T
+    {0x3F,0x40,0x40,0x40,0x3F}, // U
+    {0x1F,0x20,0x40,0x20,0x1F}, // V
+    {0x3F,0x40,0x38,0x40,0x3F}, // W
+    {0x63,0x14,0x08,0x14,0x63}, // X
+    {0x07,0x08,0x70,0x08,0x07}, // Y
+    {0x61,0x51,0x49,0x45,0x43}  // Z
+};
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -53,9 +123,169 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_USART2_UART_Init(void);
+
+static void OLED_WriteCommand(uint8_t command);
+static void OLED_Init(void);
+static void OLED_Clear(void);
+static void OLED_Update(void);
+static void OLED_DrawChar(uint8_t x, uint8_t y, char c);
+static void OLED_DrawString(uint8_t x, uint8_t y, const char *str);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
+
+/* OLED command -------------------------------------------------------------*/
+static void OLED_WriteCommand(uint8_t command)
+{
+    uint8_t data[2];
+
+    data[0] = 0x00;
+    data[1] = command;
+
+    HAL_I2C_Master_Transmit(
+        &hi2c1,
+        SSD1306_ADDR,
+        data,
+        2,
+        HAL_MAX_DELAY
+    );
+}
+
+/* OLED initialisation ------------------------------------------------------*/
+static void OLED_Init(void)
+{
+    HAL_Delay(100);
+
+    OLED_WriteCommand(0xAE); // Display OFF
+
+    OLED_WriteCommand(0xD5);
+    OLED_WriteCommand(0x80);
+
+    OLED_WriteCommand(0xA8);
+    OLED_WriteCommand(0x3F);
+
+    OLED_WriteCommand(0xD3);
+    OLED_WriteCommand(0x00);
+
+    OLED_WriteCommand(0x40);
+
+    OLED_WriteCommand(0x8D);
+    OLED_WriteCommand(0x14);
+
+    OLED_WriteCommand(0x20);
+    OLED_WriteCommand(0x00); // Horizontal addressing mode
+
+    OLED_WriteCommand(0xA1);
+    OLED_WriteCommand(0xC8);
+
+    OLED_WriteCommand(0xDA);
+    OLED_WriteCommand(0x12);
+
+    OLED_WriteCommand(0x81);
+    OLED_WriteCommand(0x7F);
+
+    OLED_WriteCommand(0xD9);
+    OLED_WriteCommand(0xF1);
+
+    OLED_WriteCommand(0xDB);
+    OLED_WriteCommand(0x40);
+
+    OLED_WriteCommand(0xA4);
+    OLED_WriteCommand(0xA6);
+
+    OLED_WriteCommand(0xAF); // Display ON
+
+    OLED_Clear();
+    OLED_Update();
+}
+
+/* Clear buffer -------------------------------------------------------------*/
+static void OLED_Clear(void)
+{
+    for (uint16_t i = 0; i < sizeof(oled_buffer); i++)
+    {
+        oled_buffer[i] = 0x00;
+    }
+}
+
+/* Update physical display --------------------------------------------------*/
+static void OLED_Update(void)
+{
+    uint8_t data[129];
+
+    data[0] = 0x40;
+
+    for (uint8_t page = 0; page < 8; page++)
+    {
+        OLED_WriteCommand(0xB0 + page);
+        OLED_WriteCommand(0x00);
+        OLED_WriteCommand(0x10);
+
+        for (uint8_t col = 0; col < 128; col++)
+        {
+            data[col + 1] =
+                oled_buffer[(page * 128) + col];
+        }
+
+        HAL_I2C_Master_Transmit(
+            &hi2c1,
+            SSD1306_ADDR,
+            data,
+            129,
+            HAL_MAX_DELAY
+        );
+    }
+}
+
+/* Draw character -----------------------------------------------------------*/
+static void OLED_DrawChar(uint8_t x, uint8_t y, char c)
+{
+    if (c < ' ' || c > 'Z')
+        return;
+
+    uint8_t index = c - ' ';
+
+    for (uint8_t i = 0; i < 5; i++)
+    {
+        uint8_t column = font5x7[index][i];
+
+        for (uint8_t bit = 0; bit < 7; bit++)
+        {
+            if (column & (1 << bit))
+            {
+                uint8_t px = x + i;
+                uint8_t py = y + bit;
+
+                if (px < 128 && py < 64)
+                {
+                    oled_buffer[(py / 8) * 128 + px]
+                        |= (1 << (py % 8));
+                }
+            }
+        }
+    }
+}
+
+/* Draw string --------------------------------------------------------------*/
+static void OLED_DrawString(uint8_t x, uint8_t y, const char *str)
+{
+    while (*str)
+    {
+        OLED_DrawChar(x, y, *str);
+        x += 6;
+
+        if (x > 122)
+        {
+            x = 0;
+            y += 8;
+        }
+
+        if (y >= 64)
+            break;
+
+        str++;
+    }
+}
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
@@ -94,7 +324,18 @@ int main(void)
   MX_I2C1_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
+  HAL_Delay(100);
 
+  OLED_Init();
+
+  OLED_Clear();
+
+  OLED_DrawString(0, 0, "HELLO ESK8!");
+  OLED_DrawString(0, 16, "STM32F401RE");
+  OLED_DrawString(0, 32, "OLED TEST");
+  OLED_DrawString(0, 48, "I2C OK");
+
+  OLED_Update();
   /* USER CODE END 2 */
 
   /* Infinite loop */
