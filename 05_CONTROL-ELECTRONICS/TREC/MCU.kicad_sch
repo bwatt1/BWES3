@@ -4,6 +4,12 @@
 	(generator_version "8.0")
 	(uuid "cfcfffb9-2420-42f7-a2c8-8923af617412")
 	(paper "A4")
+	(title_block
+		(title "MCU Electrical Schematic")
+		(date "2025-04-20")
+		(rev "0")
+		(company "B Watt")
+	)
 	(lib_symbols
 		(symbol "Connector:Conn_01x04_Pin"
 			(pin_names

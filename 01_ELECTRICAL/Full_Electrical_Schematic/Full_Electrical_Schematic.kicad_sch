@@ -1738,6 +1738,26 @@
 		)
 		(uuid "8bc56bfa-92e0-4d87-8082-c8746d178603")
 	)
+	(text_box "2.4GHz RF"
+		(exclude_from_sim no)
+		(at 121.92 120.65 0)
+		(size 21.59 11.43)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(fill
+			(type color)
+			(color 255 49 217 0.3)
+		)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left top)
+		)
+		(uuid "ba5b00a4-1f82-4473-b0e1-9f40db510a18")
+	)
 	(symbol
 		(lib_id "Connector:Conn_01x01_Pin")
 		(at 168.91 101.6 0)
